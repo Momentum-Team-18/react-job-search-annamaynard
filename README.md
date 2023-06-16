@@ -4,7 +4,8 @@ For this project, you will build a mini job-search interface using the Findwork 
 
 ## Requirements
 
-Create your React application using [Vite](https://vitejs.dev/guide/#scaffolding-your-first-vite-project). The application should have tab-style navigation and allow a user to select a category to see job listings in that category. You should have a loading indicator for the UI while the data is being fetched, and your user should have an option to get a random remote job from the API.
+Create your React application using [Vite](https://vitejs
+.dev/guide/#scaffolding-your-first-vite-project). The application should have tab-style navigation and allow a user to select a category to see job listings in that category. You should have a loading indicator for the UI while the data is being fetched, and your user should have an option to get a random remote job from the API.
 
 You should handle null or missing values gracefully -- that is, your UI should not look broken if data is missing.
 

@@ -7,8 +7,7 @@ function JobSearch() {
   const [searchKeyword, setSearchKeyword] = useState("");
   const [sortedBy, setSortedBy] = useState("");
   const [expandedCards, setExpandedCards] = useState([]);
-  const [jobDetail, setJobDetail] = useState('');
-  
+  const [filteredCategories, setFilteredCategories] = useState([]);
 
   useEffect(() => {
     axios
@@ -29,8 +28,6 @@ function JobSearch() {
     setSortedBy(sortBy);
   };
 
-
-//   this is what you use to change what the state is 
   const toggleCardExpansion = (id) => {
     setExpandedCards((prevExpandedCards) =>
       prevExpandedCards.includes(id)
@@ -39,15 +36,38 @@ function JobSearch() {
     );
   };
 
-//   for referencing the state
   const isCardExpanded = (id) => {
     return expandedCards.includes(id);
   };
 
+  const handleJobDetail = (jobId) => {
+    // Handle the job detail logic here
+  };
 
-  const filteredJobs = jobs.filter((job) =>
-    job.role.toLowerCase().includes(searchKeyword.toLowerCase()) || job.employment_type.toLowerCase().includes(searchKeyword.toLowerCase())
+  const filterByCategory = (category) => {
+    setSearchKeyword("");
+    setFilteredCategories(
+      jobs.filter((job) => {
+        const jobCategory = job.role.toLowerCase();
+        return (
+          (category === "python" && (jobCategory.includes("python") || jobCategory.includes("django"))) ||
+          (category === "react" && jobCategory.includes("react")) ||
+          (category === "javascript" && jobCategory.includes("javascript")) ||
+          (category === "other" && !jobCategory.includes("python") && !jobCategory.includes("django") && !jobCategory.includes("react") && !jobCategory.includes("javascript"))
+        );
+      })
     );
+  };
+
+  const clearFilter = () => {
+    setSearchKeyword("");
+    setFilteredCategories([]);
+  };
+
+  const filteredJobs = filteredCategories.length > 0 ? filteredCategories : jobs.filter((job) =>
+    job.role.toLowerCase().includes(searchKeyword.toLowerCase()) ||
+    job.employment_type.toLowerCase().includes(searchKeyword.toLowerCase())
+  );
 
   const sortedCategories = filteredJobs.sort((a, b) => {
     if (sortedBy === "company_name") {
@@ -61,11 +81,6 @@ function JobSearch() {
     }
   });
 
-  const handleJobDetail = (jobId) => {
-    history.push(`/job/${jobId}`);
-  };
-
-  
   return (
     <div>
       <div className="jobCard">
@@ -78,28 +93,34 @@ function JobSearch() {
         />
         <div className="navigation">
           <button
-            className={sortedBy === "company_name" ? "active" : ""}
-            onClick={() => handleSortBy("company_name")}
+            className={filteredCategories.length === 0 ? "active" : ""}
+            onClick={clearFilter}
           >
-            Company Name
+            All Jobs
           </button>
           <button
-            className={sortedBy === "role" ? "active" : ""}
-            onClick={() => handleSortBy("role")}
+            className={filteredCategories.includes("python") ? "active" : ""}
+            onClick={() => filterByCategory("python")}
           >
-            Role
+            Python/Django
           </button>
           <button
-            className={sortedBy === "employment_type" ? "active" : ""}
-            onClick={() => handleSortBy("employment_type")}
+            className={filteredCategories.includes("react") ? "active" : ""}
+            onClick={() => filterByCategory("react")}
           >
-            Employment Type
+            React
           </button>
           <button
-            className={sortedBy === "date_posted" ? "active" : ""}
-            onClick={() => handleSortBy("date_posted")}
+            className={filteredCategories.includes("javascript") ? "active" : ""}
+            onClick={() => filterByCategory("javascript")}
           >
-            Date Posted
+            JavaScript
+          </button>
+          <button
+            className={filteredCategories.includes("other") ? "active" : ""}
+            onClick={() => filterByCategory("other")}
+          >
+            Other
           </button>
         </div>
       </div>
@@ -112,12 +133,11 @@ function JobSearch() {
               onClick={() => toggleCardExpansion(category.id)}
             >
               <div className="card-header">
-              <h2><span className="expand-icon">{isCardExpanded(category.id) ? "  ▼" : "  ▶"}</span>                 {category.company_name}</h2>
-              <h3> {category.role}</h3>
+                <h2><span className="expand-icon">{isCardExpanded(category.id) ? "  ▼" : "  ▶"}</span> {category.company_name}</h2>
+                <h3>{category.role}</h3>
               </div>
-              {isCardExpanded(category.id) ? (
+              {isCardExpanded(category.id) && (
                 <div className="card-details">
-                  
                   <p>{category.employment_type}</p>
                   <p>{category.date_posted}</p>
                   <p>{category.location}</p>
@@ -125,7 +145,7 @@ function JobSearch() {
                   <p>{category.description}</p>
                   <button onClick={() => handleJobDetail(category.id)}>View Job Details</button>
                 </div>
-              ) : null}
+              )}
             </div>
           </div>
         ))}

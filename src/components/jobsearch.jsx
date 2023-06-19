@@ -45,7 +45,7 @@ function JobSearch() {
 
 
   const filteredJobs = jobs.filter((job) =>
-    job.role.toLowerCase().includes(searchKeyword.toLowerCase())
+    job.role.toLowerCase().includes(searchKeyword.toLowerCase()) || job.employment_type.toLowerCase().includes(searchKeyword.toLowerCase())
     );
 
   const sortedCategories = filteredJobs.sort((a, b) => {

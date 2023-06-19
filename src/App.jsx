@@ -4,9 +4,10 @@ import JobSearch from './components/jobsearch.jsx';
 
 function App() {
   return (
-    
+    <>
     <JobSearch />
-    
+    {/* <JobTitle />  */}
+    </>
   );
 }
 

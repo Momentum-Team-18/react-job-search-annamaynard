@@ -60,4 +60,9 @@ input{
     margin: 4px;
 }
 
-.expanded
+.expanded{ 
+    background-color: aqua;}
+
+.company_name{
+    background-color: hotpink;
+}
